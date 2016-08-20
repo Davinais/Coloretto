@@ -10,18 +10,32 @@ class Players
 	public:
 		string name;
 		Players();
-		void AddHands(int color){hands[color]++;};
-		bool CheckValid(){return have_taken;};
-		void setTakenStatus(bool value){have_taken = value;};
+		void AddHands(int color){hands[color]++;}
+		bool CheckValid(){return have_taken;}
+		void setTakenStatus(bool value){have_taken = value;}
+		void PrintHands(int player_num, string* color_name);
+		void test(int a){cout << hands[a] << endl;}
 	private:
-		int hands[7];
+		int hands[9];
 		bool have_taken;
 };
 Players::Players()
 {
-	for(int cnum=0; cnum<7; cnum++)
+	for(int cnum=0; cnum<9; cnum++)
 		hands[cnum] = 0;
 	have_taken = false;
+}
+void Players::PrintHands(int player_num, string* color_name)
+{
+	for(int i=0; i<9; i++)
+	{
+		//Because 3 players only have 6 colors, skip the 7th when it's 3 players.
+		if(player_num == 3 && i == 6)
+			continue;
+		else if(hands[i] != 0)
+			cout << color_name[i] << " กั " << hands[i] << ", ";
+	}
+	cout << endl << endl;
 }
 void shuffle(int *cards, int cards_MAX)
 {
@@ -55,7 +69,7 @@ int main()
 {
 	int player_num,cards[77], cards_MAX;
 	//0=Orange, 1=Yellow, 2=Pink, 3=Gray, 4=Green, 5=Brown, 6=Blue, 7=Rainbow, 8=+2Card, 10=End Card
-	string colors[]={"Orange", "Yellow", "Pink", "Gray", "Green", "Brown", "Blue", "Rainbow", "+2 Card"};
+	string colors[9]={"Orange", "Yellow", "Pink", "Gray", "Green", "Brown", "Blue", "Rainbow", "+2 Card"};
 	bool color_be_selected[7] = {false, false, false, false, false, false, false};
 	cout << "Coloretto!" << endl
 		 << "Players: 3 to 5 people" << endl
@@ -76,6 +90,7 @@ int main()
 		int choice;
 		cin >> choice;
 		choice--;
+		cout << "You choose " << colors[choice] << endl;
 		player[i].AddHands(choice);
 		color_be_selected[choice] = true;
 	}
@@ -147,7 +162,15 @@ int main()
 						if(lamp[j][k] != 11)
 							cout << setw(8) << colors[lamp[j][k]] << " ";
 					}
-					cout << endl << endl;
+					if(j+1 != player_num)
+						cout << endl << endl;
+					else
+						cout << endl << "-----------------------------------------" << endl;
+				}
+				for(int pn=0; pn<player_num; pn++)
+				{
+					cout << "[" << pn+1 << ". " << player[pn].name << "]: ";
+					player[pn].PrintHands(player_num, colors);
 				}
 				if(!player[i].CheckValid())
 				{
@@ -223,6 +246,7 @@ int main()
 			}
 		}while(!TurnEnd);
 	}while(!GameEnd);
+	cout << "End!" << endl;
 	system("PAUSE");
 	return 0;
 }
