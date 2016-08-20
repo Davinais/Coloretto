@@ -51,19 +51,21 @@ void shuffle(int *cards, int cards_MAX)
 	cards[cards_MAX] = cards[cards_MAX-15];
 	cards[cards_MAX-15] = 10;
 }
-void draw(int *cards, int *nowDraw, string *name, bool *GameEnd)
+int draw(int *cards, int nowDraw, string *name, bool *GameEnd)
 {
-	if(cards[*nowDraw] == 10)
+	if(cards[nowDraw] == 10)
 	{
 		cout << "You get the End Game Card." << endl
 			 << "The game will end when this turn end." << endl
 			 << "Since you can't put the End Game Card, draw a card again." << endl;
 		*GameEnd = true;
-		*nowDraw++;
-		draw(cards, nowDraw, name, GameEnd);
+		nowDraw++;
+		nowDraw = draw(cards, nowDraw, name, GameEnd);
+		return nowDraw;
 	}
 	else
-		cout << "You get a card: " << setw(8) << name[cards[*nowDraw]] << endl;
+		cout << "You get a card: " << setw(8) << name[cards[nowDraw]] << endl;
+	return nowDraw;
 }
 int main()
 {
@@ -183,7 +185,7 @@ int main()
 					cin >> action;
 					if(action == 1)
 					{
-						draw(cards, &nowDraw, colors, &GameEnd);
+						nowDraw = draw(cards, nowDraw, colors, &GameEnd);
 						cout << "Please choose a lamp to place the card:" << endl;
 						for(int lnum=0; lnum<player_num; lnum++)
 						{
@@ -236,7 +238,10 @@ int main()
 				}
 				if(taken_player == player_num)
 				{
-					cout << "All of the lamp are off, start a new turn." << endl;
+					if(GameEnd)
+						cout << "The last turn is finished. Now is score calculating time." << endl;
+					else
+						cout << "All of the lamp are off, start a new turn." << endl;
 					TurnEnd = true;
 					system("PAUSE");
 					break;
