@@ -39,21 +39,23 @@ void shuffle(int *cards, int cards_MAX)
 }
 void draw(int *cards, int *nowDraw, string *name, bool *GameEnd)
 {
-	cout << "You get a card: " << setw(8) << name[cards[*nowDraw]] << endl;
 	if(cards[*nowDraw] == 10)
 	{
-		cout << "The game will end when this turn end." << endl
-			 << "Since you can't put End Card, draw a card again." << endl;
+		cout << "You get the End Game Card." << endl
+			 << "The game will end when this turn end." << endl
+			 << "Since you can't put the End Game Card, draw a card again." << endl;
 		*GameEnd = true;
 		*nowDraw++;
 		draw(cards, nowDraw, name, GameEnd);
 	}
+	else
+		cout << "You get a card: " << setw(8) << name[cards[*nowDraw]] << endl;
 }
 int main()
 {
 	int player_num,cards[77], cards_MAX;
 	//0=Orange, 1=Yellow, 2=Pink, 3=Gray, 4=Green, 5=Brown, 6=Blue, 7=Rainbow, 8=+2Card, 10=End Card
-	string colors[9]={"Orange", "Yellow", "Pink", "Gray", "Green", "Brown", "Blue", "Rainbow", "+2 Card"};
+	string colors[]={"Orange", "Yellow", "Pink", "Gray", "Green", "Brown", "Blue", "Rainbow", "+2 Card"};
 	bool color_be_selected[7] = {false, false, false, false, false, false, false};
 	cout << "Coloretto!" << endl
 		 << "Players: 3 to 5 people" << endl
